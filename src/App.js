@@ -44,28 +44,28 @@ const Submit = styled.input`
   border-radius: 10px;
 `;
 
+// TODO - allow for "questions" which don't require an answer and automatically move onto a new question after a second or so
+// TODO - add animations or interval after question submission
+// TODO - allow for name (and potentially other requested values) to be used within questions
+
 function App() {
-  const [name, setName] = useState("tom");
+  const [name, setName] = useState("gdfg");
   const [inputVal, setInputVal] = useState("");
   const [questions, setQuestions] = useState([
-    // {
-    //   id: "intro",
-    //   text: "Hello :wave: I’m here to help – if you want to know more about a question at any point, just click the (?) icon",
-    //   noAnswerRequired: true,
-    //   wait: "0.5",
-    // },
+
     {
       step: 0,
-      text: "Can I start by asking your full name?",
+      text: "Hello 👋 I’m here to help – if you want to know more about a question at any point, just click the (?) icon. Can I start by asking your full name?",
       answer: null,
       show: true,
-      state: "unanswered"
+      state: "unanswered",
+      name: true
     },
     {
       step: 1,
       text: `Hi ${name}, did a landlord or agent refuse to show or rent you a property because you’d need to claim housing benefit to pay for it?`,
       answer: null,
-      show: false
+      show: false,
     },
     {
       step: 2,
@@ -78,41 +78,28 @@ function App() {
 
   console.log(questions);
 
-  const handleChange = (e, step, answer, index) => {
+  const handleChange = (e, step, answer, index, isNameInput) => {
     e.preventDefault();
-    // const thisQ = questions.find(el => el.step === step);
+    setName(answer)
+
     const thisQ = questions[index];
-    // const nextQ = questions.find(el => el.step === step + 1);
     const nextQ = questions[index + 1];
 
     thisQ.answer = answer;
     thisQ.state = "answered";
-    // thisQ.show = false;
 
     if (nextQ) nextQ.show = true;
-    // setQuestions(prevState => prevState + 1)
 
-    // const test = []
     const newState = [...questions];
 
     newState[index] = thisQ;
     if (nextQ) {
       newState[index + 1] = nextQ;
     }
-
     setQuestions(newState);
     console.log(questions);
-    // setQuestions(...questions, qToUpdate);
-    // console.log(qToUpdate);
+
   };
-
-  // const createQuestions = () => {
-  //   // for (const question of questions) {
-  //   //   return question.text;
-  //   // }
-
-  //   return questions.map(i => i.show === true && i.text);
-  // };
 
   return (
     <Wrapper className="App">
@@ -122,12 +109,12 @@ function App() {
             i.show && (
               <>
                 <Bubble question>
-                  <p>{i.text}</p>
+                  {i.text}
                 </Bubble>
 
                 {!i.answer ? (
                   <form
-                    onSubmit={e => handleChange(e, i.step, inputVal, index)}
+                    onSubmit={e => handleChange(e, i.step, inputVal, index, i.name)}
                   >
                     <TextInput>
                       <Input
