@@ -1,8 +1,48 @@
 import React, { useState } from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import styled from "styled-components";
 
-const Input = ({ type, onChange }) => <input type={type} onChange={onChange} />;
+const Input = ({ type, onChange }) => (
+  <input type={type} onChange={onChange} className="text-input" />
+);
+
+const Bubble = styled.div`
+  background: ${props => (props.question ? "#f1f0f0" : "#e4303d")};
+  border-radius: 5px;
+  padding: 1em;
+  max-width: 400px;
+  align-self: ${props => (props.question ? "flex-start" : "flex-end")};
+  color: ${props => (props.question ? "black" : "white")};
+`;
+
+const Wrapper = styled.div`
+  width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+`;
+
+const TextInput = styled.div`
+  width: 100%;
+  clear: both;
+  display: flex;
+  margin-top: 0.5em;
+  justify-content: space-between;
+
+  .text-input {
+    width: 75%;
+    padding: 0.5em;
+    border: 2px solid #f1f0f0;
+    border-radius: 10px;
+  }
+`;
+
+const Submit = styled.input`
+  width: 20%;
+  background: white;
+  border: 2px solid #12b9bf;
+  border-radius: 10px;
+`;
 
 function App() {
   const [name, setName] = useState("tom");
@@ -75,29 +115,35 @@ function App() {
   // };
 
   return (
-    <div className="App">
+    <Wrapper className="App">
       {questions &&
         questions.map(
           (i, index) =>
             i.show && (
               <>
-                <p>{i.text}</p>
+                <Bubble question>
+                  <p>{i.text}</p>
+                </Bubble>
 
                 {!i.answer ? (
                   <form
                     onSubmit={e => handleChange(e, i.step, inputVal, index)}
                   >
-                    <Input
-                      id={i.id}
-                      onChange={e => setInputVal(e.target.value)}
-                    />
-                    <input type="submit" value="Submit" />
+                    <TextInput>
+                      <Input
+                        id={i.id}
+                        onChange={e => setInputVal(e.target.value)}
+                      />
+                      <Submit type="submit" value="Send" className="button" />
+                    </TextInput>
                   </form>
-                ) : i.answer}
+                ) : (
+                  <Bubble answer>{i.answer}</Bubble>
+                )}
               </>
             )
         )}
-    </div>
+    </Wrapper>
   );
 }
 
