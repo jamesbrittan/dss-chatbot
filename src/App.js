@@ -51,21 +51,38 @@ const Submit = styled.input`
 function App() {
   const [name, setName] = useState("gdfg");
   const [inputVal, setInputVal] = useState("");
-  const [questions, setQuestions] = useState([
 
+  // TODO, maybe move questions out of state and just use this for answers/progress
+  const [questions, setQuestions] = useState([
     {
       step: 0,
-      text: "Hello 👋 I’m here to help – if you want to know more about a question at any point, just click the (?) icon. Can I start by asking your full name?",
+      text:
+        "Hello 👋 I’m here to help – if you want to know more about a question at any point, just click the (?) icon. Can I start by asking your full name?",
       answer: null,
       show: true,
       state: "unanswered",
-      name: true
+      name: true,
+      // determineNextStep: () => 1
+      determineNextStep: input => {
+        if (typeof input !== "string" || input.length === 0) {
+          console.log("invalid input"); // TODO - proper error handling
+        } else {
+          switch (input.toLowerCase()) {
+            case "james":
+              return 1;
+            case "tom":
+              return 2;
+
+            // no default
+          }
+        }
+      }
     },
     {
       step: 1,
       text: `Hi ${name}, did a landlord or agent refuse to show or rent you a property because you’d need to claim housing benefit to pay for it?`,
       answer: null,
-      show: false,
+      show: false
     },
     {
       step: 2,
@@ -73,32 +90,56 @@ function App() {
         "And what date did this happen? If you don’t know the exact day, the month and year would help.",
       answer: null,
       show: false
+    },
+    {
+      step: 3,
+      text: "this is question 3",
+      answer: null,
+      show: false
     }
   ]);
 
-  console.log(questions);
-
   const handleChange = (e, step, answer, index, isNameInput) => {
     e.preventDefault();
-    setName(answer)
+    setName(answer);
 
     const thisQ = questions[index];
-    const nextQ = questions[index + 1];
+    const nextQ = questions[thisQ.determineNextStep(answer)];
+
+    // const thisQ = questions.find(q => q.step === step);
+    // const nextQ = questions.find(
+    //   q => q.step === thisQ.determineNextStep(answer)
+    // );
+
+    console.log(nextQ);
 
     thisQ.answer = answer;
     thisQ.state = "answered";
 
     if (nextQ) nextQ.show = true;
 
-    const newState = [...questions];
+    let newState = [];
 
-    newState[index] = thisQ;
-    if (nextQ) {
-      newState[index + 1] = nextQ;
-    }
-    setQuestions(newState);
-    console.log(questions);
+    questions.forEach((question, index) => {
+      if (question.step === thisQ.step) {
+        newState[index] = thisQ;
+      } else if (question.step === nextQ.step) {
+        newState[index] = nextQ;
+      } else {
+        newState[index] = question;
+      }
+    });
 
+    console.log(newState);
+
+    // const newState = [...questions];
+
+    // newState[index] = thisQ;
+    // if (nextQ) {
+    //   newState[index + 1] = nextQ;
+    // }
+    // setQuestions(newState);
+    // console.log(questions);
   };
 
   return (
@@ -108,13 +149,13 @@ function App() {
           (i, index) =>
             i.show && (
               <>
-                <Bubble question>
-                  {i.text}
-                </Bubble>
+                <Bubble question>{i.text}</Bubble>
 
                 {!i.answer ? (
                   <form
-                    onSubmit={e => handleChange(e, i.step, inputVal, index, i.name)}
+                    onSubmit={e =>
+                      handleChange(e, i.step, inputVal, index, i.name)
+                    }
                   >
                     <TextInput>
                       <Input
