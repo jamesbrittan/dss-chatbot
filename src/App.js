@@ -49,21 +49,20 @@ const Submit = styled.input`
 // TODO - allow for name (and potentially other requested values) to be used within questions
 
 function App() {
-  const [name, setName] = useState("gdfg");
+  const [name, setName] = useState("");
   const [inputVal, setInputVal] = useState("");
 
-  // TODO, maybe move questions out of state and just use this for answers/progress
+  // TODO, maybe move questions out of state and just use this for answers/progress (move determineNext step)
   const [questions, setQuestions] = useState([
     {
       step: 0,
-      text:
-        "Hello 👋 I’m here to help – if you want to know more about a question at any point, just click the (?) icon. Can I start by asking your full name?",
       answer: null,
       show: true,
       state: "unanswered",
       name: true,
       // determineNextStep: () => 1
       determineNextStep: input => {
+        // Error handling probably doesn't belong here
         if (typeof input !== "string" || input.length === 0) {
           console.log("invalid input"); // TODO - proper error handling
         } else {
@@ -80,31 +79,54 @@ function App() {
     },
     {
       step: 1,
-      text: `Hi ${name}, did a landlord or agent refuse to show or rent you a property because you’d need to claim housing benefit to pay for it?`,
       answer: null,
       show: false
     },
     {
       step: 2,
-      text:
-        "And what date did this happen? If you don’t know the exact day, the month and year would help.",
       answer: null,
       show: false
     },
     {
       step: 3,
-      text: "this is question 3",
       answer: null,
       show: false
     }
   ]);
+
+  // const qText = {
+  //   0:
+  // }
+
+  // This needs to be set outside of useState to use stateful values like ${name}
+  // Non stateful related values like determineNextStep might also belong here
+  // The keys here need to match with the "step" value for each question in useState
+  const qText = {
+    0: "Hello 👋 I’m here to help – if you want to know more about a question at any point, just click the (?) icon. Can I start by asking your full name?",
+    1: `Hi ${name}, did a landlord or agent refuse to show or rent you a property because you’d need to claim housing benefit to pay for it?`,
+    2: "And what date did this happen? If you don’t know the exact day, the month and year would help.",
+    3: "Was this a letting agent or a landlord?",
+    4: "Got it. And what reason did they give you? Or did they just not respond when you got in contact?",
+    5: "Do you have any evidence of this? eg. A screenshot of an email or text, or a note of a phone call.",
+    6: "And do you have a link to the advert of the property?",
+    7: "Thanks. Have you had previous success renting property, paying your rent in full and on time?",
+    8: "For how many years?",
+    9: "Nearly there! Could you provide a good reference from a previous landlord?",
+    10: "Great – that’s really useful evidence to help build your case.",
+    11: "Do you have access to any savings and could you pay some rent in advance? Or do you have someone who could act as a financial guarantor?",
+    12: "Three more questions! Do you have a rough idea of your total monthly income?",
+    13: "Which of the following best applies to you?",
+    14: "Do you have a disability and/or suffer from long-term ill health? I’m asking you this because it may help the urgency of your case.",
+    15: "That’s it! Now I’m going to give you a letter to send to the agent or landlord."
+  };
 
   const handleChange = (e, step, answer, index, isNameInput) => {
     e.preventDefault();
     setName(answer);
 
     const thisQ = questions[index];
-    const nextQ = questions[thisQ.determineNextStep(answer)];
+    const nextQ =
+      questions[thisQ.determineNextStep(answer)] || questions[index + 1];
 
     // const thisQ = questions.find(q => q.step === step);
     // const nextQ = questions.find(
@@ -138,7 +160,7 @@ function App() {
     // if (nextQ) {
     //   newState[index + 1] = nextQ;
     // }
-    // setQuestions(newState);
+    setQuestions(newState);
     // console.log(questions);
   };
 
@@ -149,7 +171,7 @@ function App() {
           (i, index) =>
             i.show && (
               <>
-                <Bubble question>{i.text}</Bubble>
+                <Bubble question>{qText[i.step]}</Bubble>
 
                 {!i.answer ? (
                   <form
