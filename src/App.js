@@ -59,38 +59,104 @@ function App() {
       answer: null,
       show: true,
       state: "unanswered",
-      name: true,
-      // determineNextStep: () => 1
-      determineNextStep: input => {
-        // Error handling probably doesn't belong here
-        if (typeof input !== "string" || input.length === 0) {
-          console.log("invalid input"); // TODO - proper error handling
-        } else {
-          switch (input.toLowerCase()) {
-            case "james":
-              return 1;
-            case "tom":
-              return 2;
-
-            // no default
-          }
-        }
-      }
+      name: true
     },
     {
       step: 1,
       answer: null,
-      show: false
+      show: false,
+      state: "unanswered",
+      name: true
     },
     {
       step: 2,
       answer: null,
-      show: false
+      show: false,
+      state: "unanswered"
     },
     {
       step: 3,
       answer: null,
-      show: false
+      show: false,
+      state: "unanswered"
+    },
+    {
+      step: 4,
+      answer: null,
+      show: false,
+      state: "unanswered"
+    },
+    {
+      step: 5,
+      answer: null,
+      show: false,
+      state: "unanswered"
+    },
+    {
+      step: 6,
+      answer: null,
+      show: false,
+      state: "unanswered"
+    },
+    {
+      step: 7,
+      answer: null,
+      show: false,
+      state: "unanswered"
+    },
+    {
+      step: 8,
+      answer: null,
+      show: false,
+      state: "unanswered"
+    },
+    {
+      step: 9,
+      answer: null,
+      show: false,
+      state: "unanswered"
+    },
+    {
+      step: 10,
+      answer: null,
+      show: false,
+      state: "unanswered"
+    },
+    {
+      step: 11,
+      answer: null,
+      show: false,
+      state: "unanswered"
+    },
+    {
+      step: 12,
+      answer: null,
+      show: false,
+      state: "unanswered"
+    },
+    {
+      step: 13,
+      answer: null,
+      show: false,
+      state: "unanswered"
+    },
+    {
+      step: 14,
+      answer: null,
+      show: false,
+      state: "unanswered"
+    },
+    {
+      step: 15,
+      answer: null,
+      show: false,
+      state: "unanswered"
+    },
+    {
+      step: 16,
+      answer: null,
+      show: false,
+      state: "unanswered"
     }
   ]);
 
@@ -99,41 +165,122 @@ function App() {
   // }
 
   // This needs to be set outside of useState to use stateful values like ${name}
-  // Non stateful related values like determineNextStep might also belong here
   // The keys here need to match with the "step" value for each question in useState
+  // add "nextStep" logic to each of these blocks
+
   const qText = {
-    0: "Hello 👋 I’m here to help – if you want to know more about a question at any point, just click the (?) icon. Can I start by asking your full name?",
-    1: `Hi ${name}, did a landlord or agent refuse to show or rent you a property because you’d need to claim housing benefit to pay for it?`,
-    2: "And what date did this happen? If you don’t know the exact day, the month and year would help.",
-    3: "Was this a letting agent or a landlord?",
-    4: "Got it. And what reason did they give you? Or did they just not respond when you got in contact?",
-    5: "Do you have any evidence of this? eg. A screenshot of an email or text, or a note of a phone call.",
-    6: "And do you have a link to the advert of the property?",
-    7: "Thanks. Have you had previous success renting property, paying your rent in full and on time?",
-    8: "For how many years?",
-    9: "Nearly there! Could you provide a good reference from a previous landlord?",
-    10: "Great – that’s really useful evidence to help build your case.",
-    11: "Do you have access to any savings and could you pay some rent in advance? Or do you have someone who could act as a financial guarantor?",
-    12: "Three more questions! Do you have a rough idea of your total monthly income?",
-    13: "Which of the following best applies to you?",
-    14: "Do you have a disability and/or suffer from long-term ill health? I’m asking you this because it may help the urgency of your case.",
-    15: "That’s it! Now I’m going to give you a letter to send to the agent or landlord."
+    0: {
+      text:
+        "Hello 👋 I’m here to help – if you want to know more about a question at any point, just click the (?) icon. Can I start by asking your full name?",
+      nextStep: answer => 1
+    },
+    1: {
+      text: `Hi ${name}, did a landlord or agent refuse to show or rent you a property because you’d need to claim housing benefit to pay for it?`,
+      possibleAnswers: ["Yes", "No"],
+      nextStep: answer => {
+        switch (answer) {
+          case "yes":
+            return 2;
+          case "no":
+            return 3;
+          default:
+            return false;
+        }
+      }
+    },
+    2: {
+      text:
+        "What is the name of this landord or agent? (this is not a real question but is an example of how questions can be skipped depending on the previous answer)"
+    },
+    3: {
+      text:
+        "And what date did this happen? If you don’t know the exact day, the month and year would help."
+    },
+    4: {
+      text: "Was this a letting agent or a landlord?",
+      possibleAnswers: ["Yes", "No"]
+    },
+    5: {
+      text:
+        "Got it. And what reason did they give you? Or did they just not respond when you got in contact?"
+    },
+    6: {
+      text:
+        "Do you have any evidence of this? eg. A screenshot of an email or text, or a note of a phone call.",
+      possibleAnswers: ["Yes", "No"]
+    },
+    7: {
+      text: "And do you have a link to the advert of the property?",
+      possibleAnswers: ["Yes", "No"]
+    },
+    8: {
+      text:
+        "Thanks. Have you had previous success renting property, paying your rent in full and on time?",
+      possibleAnswers: ["Yes", "No"]
+    },
+    9: {
+      text: "For how many years?"
+    },
+    10: {
+      text:
+        "Nearly there! Could you provide a good reference from a previous landlord?",
+      possibleAnswers: ["Yes", "No"]
+    },
+    11: {
+      text: "Great – that’s really useful evidence to help build your case."
+    },
+    12: {
+      text:
+        "Do you have access to any savings and could you pay some rent in advance? Or do you have someone who could act as a financial guarantor?",
+      possibleAnswers: ["Yes", "No"]
+    },
+    13: {
+      text:
+        "Three more questions! Do you have a rough idea of your total monthly income?",
+      possibleAnswers: ["Yes", "No"]
+    },
+    14: {
+      text: "Which of the following best applies to you?",
+      possibleAnswers: ["Male", "Female", "Non-binary", "Other"]
+    },
+    15: {
+      text:
+        "Do you have a disability and/or suffer from long-term ill health? I’m asking you this because it may help the urgency of your case.",
+      possibleAnsers: ["Yes", "No"]
+    },
+    16: {
+      text:
+        "That’s it! Now I’m going to give you a letter to send to the agent or landlord."
+    }
   };
 
   const handleChange = (e, step, answer, index, isNameInput) => {
     e.preventDefault();
     setName(answer);
 
-    const thisQ = questions[index];
-    const nextQ =
-      questions[thisQ.determineNextStep(answer)] || questions[index + 1];
+    // const thisQ = questions[index];
+    const thisQ = questions.find(q => q.step === step);
+
+
+    const nextQIndex = qText[step].nextStep(answer);
+
+    //The first nextQ below finds it based on index (this is more simple but will the indexes be consistent?)
+    //The second nextQ finds it based on the "step" key
+
+    // const nextQ = questions[nextQIndex];
+    const nextQ = questions.find(q => q.step === nextQIndex);
+
+    console.log(nextQ);
+
+
+    // const nextQ =
+    //   questions[thisQ.determineNextStep(answer)] || questions[index + 1];
 
     // const thisQ = questions.find(q => q.step === step);
     // const nextQ = questions.find(
     //   q => q.step === thisQ.determineNextStep(answer)
     // );
 
-    console.log(nextQ);
 
     thisQ.answer = answer;
     thisQ.state = "answered";
@@ -171,7 +318,7 @@ function App() {
           (i, index) =>
             i.show && (
               <>
-                <Bubble question>{qText[i.step]}</Bubble>
+                <Bubble question>{qText[i.step].text}</Bubble>
 
                 {!i.answer ? (
                   <form
