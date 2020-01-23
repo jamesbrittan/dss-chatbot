@@ -204,7 +204,7 @@ function App() {
     const nextQIndex = initialQs[index].nextStep(answer.toLowerCase());
     // See comment above thisQ const
 
-    console.log(nextQIndex)
+    console.log(nextQIndex);
 
     const nextQ = questions[nextQIndex];
     // const nextQ = questions.find(q => q.step === nextQIndex);
@@ -243,13 +243,33 @@ function App() {
                       handleChange(e, i.step, inputVal, index, i.name)
                     }
                   >
-                    <TextInput>
-                      <Input
-                        id={i.id}
-                        onChange={e => setInputVal(e.target.value)}
-                      />
-                      <Submit type="submit" value="Send" className="button" />
-                    </TextInput>
+                    {!initialQs[i.step].possibleAnswers ? (
+                      <TextInput>
+                        <Input
+                          id={i.id}
+                          onChange={e => setInputVal(e.target.value)}
+                        />
+                      </TextInput>
+                    ) : (
+                      <div>
+                        {initialQs[i.step].possibleAnswers.map(
+                          (option, index) => (
+                            <div>
+                              <input
+                                type="radio"
+                                // id={option}
+                                selected={inputVal === option}
+                                name={`option${i.step}`}
+                                value={option}
+                                onChange={e => setInputVal(e.target.value)}
+                              />
+                              <label htmlFor={i.id}>{option}</label>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    )}
+                    <Submit type="submit" value="Send" className="button" />
                   </form>
                 ) : (
                   <Bubble answer>{i.answer}</Bubble>
