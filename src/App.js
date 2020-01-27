@@ -6,26 +6,32 @@ const Input = ({ type, onChange }) => (
 );
 
 const Bubble = styled.div`
-  background: ${props => (props.question ? "#f1f0f0" : "#e4303d")};
+  background: ${props => (props.question ? "#f1f0f0" : "#0b0b89")};
   border-radius: 5px;
   padding: 1em;
   max-width: 400px;
   align-self: ${props => (props.question ? "flex-start" : "flex-end")};
   color: ${props => (props.question ? "black" : "white")};
+  margin: 0.25em 0;
 `;
 
 const Wrapper = styled.div`
-  width: 800px;
-  margin: 0 auto;
+  width: 540px;
+  margin: 2em auto 0;
   display: flex;
   flex-direction: column;
   padding: 1em;
+  border: 2px solid #f1f0f0;
+  border-radius: 5px;
+  max-height: 500px;
+  overflow-x: scroll;
 `;
 
-const TextInput = styled.div`
+const TextInput = styled.label`
   width: 100%;
   clear: both;
   display: flex;
+  flex-direction: column;
   margin-top: 0.5em;
   justify-content: space-between;
 
@@ -44,12 +50,36 @@ const Submit = styled.input`
   border-radius: 10px;
 `;
 
+const Radios = styled.div`
+  width: 75%;
+  border: 2px solid #f1f0f0;
+  border-radius: 10px;
+  padding: 0.5em;
+
+  label {
+    display: flex;
+    align-items: flex-start;
+    input {
+      margin-right: 0.5em;
+    }
+    &:first-of-type {
+      margin-bottom: 0.25em;
+    }
+  }
+`;
+
 // TODO - allow for "questions" which don't require an answer and automatically move onto a new question after a second or so
 // TODO - add animations or interval after question submission
-// TODO - allow for name (and potentially other requested values) to be used within questions
+// TODO - add datepicker
 
 function App() {
-  const [name, setName] = useState("");
+  // const [name, setName] = useState("");
+
+  // Values which are provided as answers are stored here so that they can be used in following questions
+  // TODO - Why can't we just use questions state? Because there's no initial state?
+  const [details, setDetails] = useState({
+    name: ""
+  });
   const [inputVal, setInputVal] = useState("");
 
   // TODO - this initial state aray should be generated based on the initialQs
@@ -59,16 +89,18 @@ function App() {
   // The keys here need to match with the "step" value for each question in useState
   // add "nextStep" logic to each of these blocks
 
+  // This gets messed up if "step" doesn't match the index in the array (which isn't great)
   const initialQs = [
     {
       step: 0,
       text:
         "Hello 👋 I’m here to help – if you want to know more about a question at any point, just click the (?) icon. Can I start by asking your full name?",
-      nextStep: answer => 1
+      nextStep: answer => 1,
+      setAnswerInState: "name"
     },
     {
       step: 1,
-      text: `Hi ${name}, did a landlord or agent refuse to show or rent you a property because you’d need to claim housing benefit to pay for it?`,
+      text: `Hi ${details.name}, did a landlord or agent refuse to show or rent you a property because you’d need to claim housing benefit to pay for it?`,
       possibleAnswers: ["Yes", "No"],
       nextStep: answer => {
         switch (answer) {
@@ -96,7 +128,7 @@ function App() {
     {
       step: 4,
       text: "Was this a letting agent or a landlord?",
-      possibleAnswers: ["Yes", "No"],
+      possibleAnswers: ["Letting agent", "Landlord"],
       nextStep: () => 5
     },
     {
@@ -184,7 +216,7 @@ function App() {
     if (!questions.length) {
       setQuestions(initialQState);
     }
-    console.log(questions);
+    // console.log(questions);
   }, [initialQs, questions]);
 
   // useEffect(() => {
@@ -193,21 +225,25 @@ function App() {
 
   const handleChange = (e, step, answer, index, isNameInput) => {
     e.preventDefault();
-    setName(answer);
 
     //The first thisQ below finds it based on index (this is more simple but will the indexes be consistent?)
     //The second thisQ finds it based on the "step" key
 
-    // const thisQ = questions[index];
-    const thisQ = questions.find(q => q.step === step);
+    const thisQ = questions[index];
+    // const thisQ = questions.find(q => q.step === step);
 
     const nextQIndex = initialQs[index].nextStep(answer.toLowerCase());
     // See comment above thisQ const
 
-    console.log(nextQIndex);
-
     const nextQ = questions[nextQIndex];
     // const nextQ = questions.find(q => q.step === nextQIndex);
+
+    if (initialQs[step].setAnswerInState) {
+      const detailsFromState = details;
+
+      detailsFromState[initialQs[step].setAnswerInState] = answer;
+      setDetails(detailsFromState);
+    }
 
     thisQ.answer = answer;
     thisQ.state = "answered";
@@ -224,60 +260,70 @@ function App() {
       } else {
         newState[index] = question;
       }
+
+      setInputVal(false);
     });
     setQuestions(newState);
   };
 
   return (
-    <Wrapper className="App">
-      {questions &&
-        questions.map(
-          (i, index) =>
-            i.show && (
-              <>
-                <Bubble question>{initialQs[i.step].text}</Bubble>
+    <main className="App">
+      <Wrapper>
+        <h1>Pocket lawyer</h1>
+        {questions &&
+          questions.map(
+            (i, index) =>
+              i.show && (
+                <>
+                  <Bubble question>{initialQs[i.step].text}</Bubble>
 
-                {!i.answer ? (
-                  <form
-                    onSubmit={e =>
-                      handleChange(e, i.step, inputVal, index, i.name)
-                    }
-                  >
-                    {!initialQs[i.step].possibleAnswers ? (
-                      <TextInput>
-                        <Input
-                          id={i.id}
-                          onChange={e => setInputVal(e.target.value)}
-                        />
-                      </TextInput>
-                    ) : (
-                      <div>
-                        {initialQs[i.step].possibleAnswers.map(
-                          (option, index) => (
-                            <div>
-                              <input
-                                type="radio"
-                                // id={option}
-                                selected={inputVal === option}
-                                name={`option${i.step}`}
-                                value={option}
-                                onChange={e => setInputVal(e.target.value)}
-                              />
-                              <label htmlFor={i.id}>{option}</label>
-                            </div>
-                          )
-                        )}
-                      </div>
-                    )}
-                    <Submit type="submit" value="Send" className="button" />
-                  </form>
-                ) : (
-                  <Bubble answer>{i.answer}</Bubble>
-                )}
-              </>
-            )
-        )}
-    </Wrapper>
+                  {!i.answer ? (
+                    <form
+                      onSubmit={e =>
+                        handleChange(e, i.step, inputVal, index, i.name)
+                      }
+                    >
+                      {!initialQs[i.step].possibleAnswers ? (
+                        <TextInput>
+                          Your reply:
+                          <Input
+                            id={i.id}
+                            onChange={e => setInputVal(e.target.value)}
+                          />
+                        </TextInput>
+                      ) : (
+                        <Radios>
+                          {initialQs[i.step].possibleAnswers.map(
+                            (option, index) => (
+                              <label htmlFor={i.id}>
+                                <input
+                                  type="radio"
+                                  selected={inputVal === option}
+                                  name={`option${i.step}`}
+                                  value={option}
+                                  onChange={e => setInputVal(e.target.value)}
+                                />
+                                {option}
+                              </label>
+                            )
+                          )}
+                        </Radios>
+                      )}
+                      <Submit
+                        type="submit"
+                        value="Send"
+                        className="button"
+                        disabled={!inputVal}
+                      />
+                    </form>
+                  ) : (
+                    <Bubble answer>{i.answer}</Bubble>
+                  )}
+                </>
+              )
+          )}
+      </Wrapper>
+    </main>
   );
 }
 
