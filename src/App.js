@@ -6,7 +6,7 @@ import ReactSimpleChatbot from "./ReactSimpleChatbot";
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 4em;
+  margin-top: 5em;
 `;
 
 const App = () => {
