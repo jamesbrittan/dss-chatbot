@@ -7,25 +7,66 @@ const ReactSimpleChatbot = () => {
   const [refusalDate, setRefusalDate] = useState("");
   const [refusalReason, setRefusalReason] = useState("");
 
-  useEffect(() => {
-    console.log({
-      name,
-      landlordOrAgent,
-      refusalDate,
-      refusalReason
-    });
-  });
+  // useEffect(() => {
+  //   console.log({
+  //     name,
+  //     landlordOrAgent,
+  //     refusalDate,
+  //     refusalReason
+  //   });
+  // });
 
-  const steps = [
+  const steps2 = [
     {
-      id: "start",
+      // TODO - get timing of delays right
+      id: "start0",
       message:
-        "Hello :wave: I’m here to help – if you want to know more about a question at any point, just click the (?) icon.",
-      trigger: "askName"
+        "Do you feel you’ve been discriminated against by a letting agent or landlord, because you receive benefits?",
+      trigger: "start1",
+      delay: 1000
+    },
+    {
+      id: "start1",
+      message:
+        "With just a few easy questions, we can create a personalised letter for you to send to them. Let them know what they’re doing wrong, and they might rethink their policies. You might even have grounds for a legal case against them, but we’ll get to that later.",
+      trigger: "start2",
+      delay: 4000
+    },
+    {
+      id: "start2",
+      message:
+        "Worried about privacy? Don’t be. You can change your contact preferences at any time by giving us a call on 0300 330 1234, or emailing info@shelter.org.uk. If you've already told us you want to receive updates, we'll keep contacting you in the same ways. And don't worry – although Shelter and Shelter Trading activities will use your details, we will never pass them on to third parties for marketing. Read our privacy policy [https://england.shelter.org.uk/contact_us/privacy] for more details.",
+      trigger: "start3",
+      delay: 2000
+    },
+    {
+      id: "start3",
+      message: "Ready to join the fight against discrimination? 💪",
+      trigger: "start4"
+    },
+    {
+      id: "start4",
+      options: [
+        { value: true, label: "Yes, I'm ready", trigger: "askName" },
+        // TODO - what's the next step if "no" is selected?
+        { value: false, label: "No, tell me more", trigger: "tellMeMore" }
+      ]
+    },
+    {
+      id: "tellMeMore",
+      message: "Here is some more information about this chatbot...",
+      trigger: "tellMeMoreAcknowledge"
+    },
+    {
+      id: "tellMeMoreAcknowledge",
+      options: [
+        { value: true, label: "Ok, let's get started", trigger: "askName" }
+      ]
     },
     {
       id: "askName",
-      message: "Can I start by asking your full name?",
+      message:
+        "Great! 😀 What’s your full name? We need this to say who the letter is from.",
       trigger: "setName"
     },
     {
@@ -36,103 +77,421 @@ const ReactSimpleChatbot = () => {
         if (typeof value !== "string") {
           return "value should be a string";
         }
-        setName(value);
+        // setName(value);
         return true;
       },
-      trigger: "askWereYouRefused"
+      trigger: "askWereYouRefused",
+      metadata: {
+        capture: name
+      }
     },
     {
       id: "askWereYouRefused",
+      // TODO - Displaying full name here like "Hi James Brittan" is a possibly a bit weird.
+      // We can split this to use just the first name "Hi James" but this assumes the name is in British/western format (or something like that)
+      // Korean names would break this for example
       message:
-        "Hi {previousValue}, did a landlord or agent refuse to show or rent you a property because you’d need to claim housing benefit to pay for it?",
+        "Hi {previousValue}. Have you been refused the chance to rent a property because you receive benefits?",
       trigger: "setWereYouRefused"
     },
     {
       id: "setWereYouRefused",
       options: [
-        { value: true, label: "Yes", trigger: "askRefusalDate" },
-        { value: false, label: "No", trigger: "end" }
+        { value: true, label: "Yes", trigger: "askWhichBenefits" },
+        // TODO - what happens if the user selects "no"
+        { value: false, label: "No", trigger: "askWhichBenefits" }
       ],
-      // validator: value => {
-      //   if (typeof value !== "string") {
-      //     return "value should be a string";
-      //   }
-      //   setName(value);
-      //   return true;
-      // }
-      // trigger: "end"
+      metadata: {
+        capture: "wereYouRefused"
+      }
     },
     {
-      id: "askRefusalDate",
-      message:
-        "And what date did this happen? If you don’t know the exact day, the month and year would help.",
-      trigger: "setRefusalDate"
+      id: "askWhichBenefits",
+      message: "Can you tell us what kind of benefits you receive?",
+      trigger: "setWhichBenefits"
     },
-    // TODO - create custom datepicker component here
     {
-      id: "setRefusalDate",
+      id: "setWhichBenefits",
+      options: [
+        {
+          value: "pip",
+          label: "Personal Independence Payment (PIP)",
+          trigger: "askHowDoYouIdentify"
+        },
+        {
+          value: "housing benefit",
+          label: "Housing benefit",
+          trigger: "askHowDoYouIdentify"
+        },
+        {
+          value: "employment allowance",
+          label: "Employment Allowance",
+          trigger: "askHowDoYouIdentify"
+        },
+        {
+          value: "universal credit",
+          label: "Universal Credit",
+          trigger: "askHowDoYouIdentify"
+        },
+        {
+          value: "other",
+          label: "Other – please specify",
+          trigger: "setWhichBenefitsFreeText"
+        }
+      ],
+      metadata: {
+        capture: "whichBenefits"
+      }
+    },
+    {
+      id: "setWhichBenefitsFreeText",
       user: true,
       validator: value => {
-        if (value) {
-          setRefusalDate(value);
-          return true;
+        console.log(value);
+        if (typeof value !== "string") {
+          return "value should be a string";
         }
+        // setName(value);
+        return true;
       },
-      trigger: "askLandlordOrAgent"
+      trigger: "askHowDoYouIdentify",
+      metadata: {
+        capture: "wereYouRefused"
+      }
     },
     {
-      id: "askLandlordOrAgent",
-      message: "Was this a letting agent or a landlord?",
-      // options: [
-      //   {
-      //     value: "letting agent",
-      //     label: "Letting agent",
-      //     trigger: "askRefusalReason"
-      //   },
-      //   { value: "landlord", label: "Landlord", trigger: "askRefusalReason" }
-      // ],
-
-      trigger: "setLandlordOrAgent"
+      id: "askHowDoYouIdentify",
+      message:
+        "And can you tell us how you identify? We’re asking this so we can build a picture of who is affected by DSS discrimination.",
+      trigger: "setHowDoYouIdentify"
     },
     {
-      id: "setLandlordOrAgent",
+      id: "setHowDoYouIdentify",
+      // TODO - Should there be a "prefer not to say" option here?
       options: [
+        { value: "male", label: "Male", trigger: "askDisability" },
+        { value: "female", label: "Female", trigger: "askDisability" },
+        { value: "non-binary", label: "Non-binary", trigger: "askDisability" },
+        {
+          value: "other",
+          label: "Other – can I explain?",
+          trigger: "setHowDoYouIdentifyFreeText"
+        }
+      ],
+      metadata: {
+        capture: "wereYouRefused"
+      }
+    },
+    {
+      id: "setHowDoYouIdentifyFreeText",
+      user: true,
+      validator: value => {
+        console.log(value);
+        if (typeof value !== "string") {
+          return "value should be a string";
+        }
+        // setName(value);
+        return true;
+      },
+      trigger: "askDisability",
+      metadata: {
+        capture: "wereYouRefused"
+      }
+    },
+    {
+      id: "askDisability",
+      message: "And do you have a disability, and/or long-term ill health?",
+      trigger: "setDisability"
+    },
+    {
+      id: "setDisability",
+      // TODO - Should this lead to a free text input for more information if "yes" is selected?
+      options: [
+        { value: true, label: "Yes", trigger: "askWrittenProof" },
+        { value: false, label: "No", trigger: "askWrittenProof" }
+      ],
+      metadata: {
+        capture: "wereYouRefused"
+      }
+    },
+    {
+      id: "askWrittenProof",
+      message:
+        "Do you have written proof of an agent or landlord’s refusal to rent a property to you, because you receive benefits? 📝 For example, this could be a text message, email or letter.",
+      trigger: "setWrittenProof"
+    },
+    {
+      id: "setWrittenProof",
+      // TODO - Do we need to capture this proof, or is knowing of its existence enough?
+      // TODO - What happens if they answer "no"?
+      options: [
+        { value: true, label: "Yes", trigger: "askDate" },
+        { value: false, label: "No", trigger: "askDate" }
+      ],
+      metadata: {
+        capture: "wereYouRefused"
+      }
+    },
+    {
+      id: "askDate",
+      message:
+        "And when did this happen? If you don’t know the exact day, the month and year would be helpful.",
+      trigger: "setDate"
+    },
+    {
+      // TODO - possible improvement: a datepicker would be useful here
+      id: "setDate",
+      user: true,
+      validator: value => {
+        console.log(value);
+        if (typeof value !== "string") {
+          return "value should be a string";
+        }
+        // setName(value);
+        return true;
+      },
+      trigger: "askLettingAgentOrLandlord",
+      metadata: {
+        capture: "wereYouRefused"
+      }
+    },
+    {
+      id: "askLettingAgentOrLandlord",
+      message:
+        "Was it a landlord or letting agent who refused to rent you the property?",
+      trigger: "setLettingAgentOrLandlord"
+    },
+    {
+      id: "setLettingAgentOrLandlord",
+      options: [
+        { value: "landlord", label: "Landlord", trigger: "askLinkToAd" },
         {
           value: "letting agent",
           label: "Letting agent",
-          trigger: "askRefusalReason"
-        },
-        { value: "landlord", label: "Landlord", trigger: "askRefusalReason" }
+          trigger: "askLinkToAd"
+        }
       ],
-      validator: value => {
-        // if (typeof value !== "string") {
-        //   return "value should be a string";
-        // }
-        setLandlordOrAgent(value);
-        return true;
+      metadata: {
+        capture: "wereYouRefused"
       }
-      // trigger: "end"
     },
     {
-      id: "askRefusalReason",
+      id: "askLinkToAd",
       message:
-        "Got it. And what reason did they give you? Or did they just not respond when you got in contact?",
-      trigger: "setRefusalReason"
+        "Got it 👌 Do you have a web link to the advert of the property? Don’t worry if not.",
+      trigger: "setLinkToAd"
     },
     {
-      id: "setRefusalReason",
+      id: "setLinkToAd",
+      // TODO - Do we need the link itself?
+      options: [
+        { value: true, label: "Yes", trigger: "responseLinkToAd" },
+        { value: false, label: "No", trigger: "responseLinkToAd" }
+      ],
+      metadata: {
+        capture: "wereYouRefused"
+      }
+    },
+    {
+      // TODO - this reads like the user has answered "no" to the previous question regardless of answer.
+      id: "responseLinkToAd",
+      message:
+        "That’s ok. Now, we want to hear just a bit more about you, so we can personalise your letter.",
+      delay: 1000
+    },
+    {
+      id: "askRentedSuccessfully",
+      message:
+        "Have you rented successfully before, paying your rent in full and on time? (We know this seems personal, but it’s completely confidential and helps us build a picture of your situation)"
+    },
+    {
+      id: "setRentedSuccessfully",
+      // TODO - Do we need the link itself?
+      options: [
+        { value: true, label: "Yes", trigger: "responseLinkToAd" },
+        { value: false, label: "No", trigger: "responseLinkToAd" }
+      ],
+      metadata: {
+        capture: "wereYouRefused"
+      }
+    },
+    {
+      id: "askHowManyYearsRentedSuccessfully",
+      // TODO - this reads like the user has answered "yes" to the previous question
+      message:
+        "Brilliant! ✅ And for how many years? This might seem nosey, but we’re trying to build your case as a great tenant.",
+      trigger: "setHowManyYearsRentedSuccessfully"
+    },
+    {
+      // TODO - select list would be better than free text here
+      id: "setHowManyYearsRentedSuccessfully",
       user: true,
       validator: value => {
-        if (value) {
-          setRefusalReason(value);
-          return true;
+        console.log(value);
+        if (typeof value !== "string") {
+          return "value should be a string";
         }
+        // setName(value);
+        return true;
       },
-      trigger: "end"
+      trigger: "askCanYouGetLandlordReference",
+      metadata: {
+        capture: "wereYouRefused"
+      }
     },
-
     {
-      id: "end",
+      id: "askCanYouGetLandlordReference",
+      message:
+        "Ok – nearly finished. Could you get a good reference from your last landlord?",
+      trigger: "setCanYouGetLandlordReference"
+    },
+    {
+      id: "setCanYouGetLandlordReference",
+      options: [
+        { value: true, label: "Yes", trigger: "askDoYouHaveSavings" },
+        { value: false, label: "No", trigger: "askDoYouHaveSavings" }
+      ],
+      metadata: {
+        capture: "wereYouRefused"
+      }
+    },
+    {
+      id: "askDoYouHaveSavings",
+      message:
+        "Do you have access to savings, and could you pay some rent in advance? Or do you have someone who could be your guarantor? A guarantor is someone who can pay your rent if you end up unable to.",
+      trigger: "setDoYouHaveSavings"
+    },
+    {
+      id: "setDoYouHaveSavings",
+      options: [
+        {
+          value: { savings: "yes", rent: "no", guarantor: null },
+          label: "I have savings but could not pay rent in advance",
+          trigger: "askDoYouHaveSavings"
+        },
+        {
+          value: { savings: "yes", rent: "some", guarantor: null },
+          label: "I have savings and could pay some rent in advance",
+          trigger: "askDoYouHaveSavings"
+        },
+        {
+          value: { savings: null, rent: null, guarantor: "yes" },
+          label: "I have someone who could be a guarantor",
+          trigger: "askDoYouHaveSavings"
+        },
+        {
+          value: { savings: "no", rent: "no", guarantor: "no" },
+          label: "I don’t have any of these",
+          trigger: "askDoYouHaveSavings"
+        },
+        {
+          value: { savings: "unsure", rent: "unsure", guarantor: "unsure" },
+          label: "I’m not sure",
+          trigger: "askDoYouHaveSavings"
+        }
+      ],
+      metadata: {
+        capture: "wereYouRefused"
+      }
+    },
+    {
+      id: "responseCanYouGetLandlordReference",
+      message:
+        "Thanks for sticking with us so far! 👍 Only three more questions to go...",
+      delay: 1000,
+      trigger: "askMonthlyIncome"
+    },
+    {
+      id: "askMonthlyIncome",
+      // TODO - what happens if they're unemployed or don't know?
+      message:
+        "Do you know roughly what your monthly income is? Please enter the amount below.",
+      trigger: "setMonthlyIncome"
+    },
+    {
+      id: "setMonthlyIncome",
+      user: true,
+      validator: value => {
+        console.log(value);
+        if (typeof value !== "string") {
+          return "value should be a string";
+        }
+        // setName(value);
+        return true;
+      },
+      trigger: "end1",
+      metadata: {
+        capture: "wereYouRefused"
+      }
+    },
+    {
+      id: "end1",
+      message: "OK then – we’re all done! 🎉",
+      trigger: "end2",
+    },
+    {
+      id: "end2",
+      message: "We think this is great evidence and hope it will encourage your landlord or agent to change their policies. You may also have a good case for indirect discrimination.",
+      trigger: "end3",
+    },
+    {
+      id: "end3",
+      message: "Sadly we can’t guarantee that they will change their policies, or that you would be successful in claiming for discrimination. But we would still encourage you to send your personalised letter to the agent or landlord. Increasing awareness of discrimination against people receiving benefits might mean you have an easier time renting in the future, and help landlords make sure they’re acting lawfully.",
+      trigger: "end4",
+    },
+    {
+      id: "end4",
+      message: "You’re not only standing up for yourself, but for others in similar situations – and together, we’re more likely to make change happen.",
+      trigger: "end5",
+    },
+    {
+      // TODO - this feels redundant
+      id: "askReadyForLetter",
+      message:
+        "Ready to get your personalised letter? ➡️",
+      trigger: "setCanYouGetLandlordReference"
+    },
+    {
+      id: "setCanYouGetLandlordReference",
+      // TODO - what happens if the user select "no"?
+      options: [
+        { value: true, label: "Yes", trigger: "end6" },
+        { value: false, label: "No", trigger: "end6" }
+      ],
+      metadata: {
+        capture: "wereYouRefused"
+      }
+    },
+    {
+      id: "end5",
+      // TODO - add link
+      message: "Great! Here you go. Just click on the link to download your letter.",
+      trigger: "end6",
+    },
+    {
+      id: "end6",
+      message: "By sending this letter, you’re helping us fight against ‘no DSS’ discrimination. This could improve the future of renters like you and others, who simply want a place to call home. We can’t do this without your help, so thank you for getting involved.",
+      trigger: "askMoreHelp"
+    },
+    {
+      id: "askMoreHelp",
+      message: "Do you want more help, or to know more about our No DSS campaign?",
+      trigger: "setMoreHelp",
+    },
+    {
+      id: "setMoreHelp",
+      // TODO - what happens if the user select "yes"?
+      options: [
+        { value: true, label: "Yes", trigger: "end7" },
+        { value: false, label: "No", trigger: "end7" }
+      ],
+      metadata: {
+        capture: "wereYouRefused"
+      }
+    },
+    {
+      // TODO - needs completion message
+      id: "end7",
       message: "this is the end",
       end: true
     }
@@ -161,12 +520,25 @@ const ReactSimpleChatbot = () => {
     // }
   ];
 
-  const handleEnd = ({ steps, values }) => {
+  const handleEnd = ({ steps }) => {
+    // let obj = {};
     // console.log(steps);
-    console.log(values);
-    alert(`Chat handleEnd callback! Number: ${values[0]}`);
+    // console.log(values);
+    // const stepsToCapture = steps.filter(step => step.metadata.capture);
+    // console.log(stepsToCapture);
+    // console.log(steps)
+    // steps.forEach(element => console.log(element));
+    // steps.forEach(step => {
+    //   console.log(step)
+    //   obj[step.metadata.capture] = step.value;
+    // });
+
+    console.log(steps);
+    for (const element of steps) {
+      console.log(element);
+    }
   };
-  return <ChatBot steps={steps} handleEnd={handleEnd} />;
+  return <ChatBot steps={steps2} handleEnd={handleEnd} />;
 };
 
 export default ReactSimpleChatbot;
