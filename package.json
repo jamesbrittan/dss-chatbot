@@ -1,6 +1,6 @@
 {
-  "homepage": "http://jamesbrittan.github.io/dss-chatbot",
-  "name": "chatbot",
+  "homepage": "https://jamesbrittan.github.io/dss-chatbot",
+  "name": "dss-chatbot",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
