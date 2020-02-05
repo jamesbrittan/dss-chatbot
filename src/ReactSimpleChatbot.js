@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ChatBot from "react-simple-chatbot";
+import {hAvatar} from "./shelter_h.gif";
 
 const ReactSimpleChatbot = () => {
   const [name, setName] = useState("");
@@ -15,6 +16,7 @@ const ReactSimpleChatbot = () => {
   //     refusalReason
   //   });
   // });
+
 
   const steps2 = [
     {
@@ -306,7 +308,6 @@ const ReactSimpleChatbot = () => {
     },
     {
       id: "setRentedSuccessfully",
-      // TODO - Do we need the link itself?
       options: [
         { value: true, label: "Yes", trigger: "responseLinkToAd" },
         { value: false, label: "No", trigger: "responseLinkToAd" }
@@ -403,7 +404,6 @@ const ReactSimpleChatbot = () => {
     },
     {
       id: "askMonthlyIncome",
-      // TODO - what happens if they're unemployed or don't know?
       message:
         "Do you know roughly what your monthly income is? Please enter the amount below.",
       trigger: "setMonthlyIncome"
@@ -427,33 +427,34 @@ const ReactSimpleChatbot = () => {
     {
       id: "end1",
       message: "OK then – we’re all done! 🎉",
-      trigger: "end2",
+      trigger: "end2"
     },
     {
       id: "end2",
-      message: "We think this is great evidence and hope it will encourage your landlord or agent to change their policies. You may also have a good case for indirect discrimination.",
-      trigger: "end3",
+      message:
+        "We think this is great evidence and hope it will encourage your landlord or agent to change their policies. You may also have a good case for indirect discrimination.",
+      trigger: "end3"
     },
     {
       id: "end3",
-      message: "Sadly we can’t guarantee that they will change their policies, or that you would be successful in claiming for discrimination. But we would still encourage you to send your personalised letter to the agent or landlord. Increasing awareness of discrimination against people receiving benefits might mean you have an easier time renting in the future, and help landlords make sure they’re acting lawfully.",
-      trigger: "end4",
+      message:
+        "Sadly we can’t guarantee that they will change their policies, or that you would be successful in claiming for discrimination. But we would still encourage you to send your personalised letter to the agent or landlord. Increasing awareness of discrimination against people receiving benefits might mean you have an easier time renting in the future, and help landlords make sure they’re acting lawfully.",
+      trigger: "end4"
     },
     {
       id: "end4",
-      message: "You’re not only standing up for yourself, but for others in similar situations – and together, we’re more likely to make change happen.",
-      trigger: "end5",
+      message:
+        "You’re not only standing up for yourself, but for others in similar situations – and together, we’re more likely to make change happen.",
+      trigger: "end5"
     },
     {
       // TODO - this feels redundant
       id: "askReadyForLetter",
-      message:
-        "Ready to get your personalised letter? ➡️",
+      message: "Ready to get your personalised letter? ➡️",
       trigger: "setCanYouGetLandlordReference"
     },
     {
       id: "setCanYouGetLandlordReference",
-      // TODO - what happens if the user select "no"?
       options: [
         { value: true, label: "Yes", trigger: "end6" },
         { value: false, label: "No", trigger: "end6" }
@@ -465,18 +466,21 @@ const ReactSimpleChatbot = () => {
     {
       id: "end5",
       // TODO - add link
-      message: "Great! Here you go. Just click on the link to download your letter.",
-      trigger: "end6",
+      message:
+        "Great! Here you go. Just click on the link to download your letter.",
+      trigger: "end6"
     },
     {
       id: "end6",
-      message: "By sending this letter, you’re helping us fight against ‘no DSS’ discrimination. This could improve the future of renters like you and others, who simply want a place to call home. We can’t do this without your help, so thank you for getting involved.",
+      message:
+        "By sending this letter, you’re helping us fight against ‘no DSS’ discrimination. This could improve the future of renters like you and others, who simply want a place to call home. We can’t do this without your help, so thank you for getting involved.",
       trigger: "askMoreHelp"
     },
     {
       id: "askMoreHelp",
-      message: "Do you want more help, or to know more about our No DSS campaign?",
-      trigger: "setMoreHelp",
+      message:
+        "Do you want more help, or to know more about our No DSS campaign?",
+      trigger: "setMoreHelp"
     },
     {
       id: "setMoreHelp",
@@ -538,7 +542,7 @@ const ReactSimpleChatbot = () => {
       console.log(element);
     }
   };
-  return <ChatBot steps={steps2} handleEnd={handleEnd} />;
+  return <ChatBot botAvatar="https://res.cloudinary.com/dk5jxmsza/image/upload/v1580921453/shelter_h.gif" steps={steps2} handleEnd={handleEnd} />;
 };
 
 export default ReactSimpleChatbot;
