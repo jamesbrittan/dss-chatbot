@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "3469949ba9d0d0415c1da5192c18d7b5",
+    "revision": "06e21bbe42fb6f21a4c9512f527ec070",
     "url": "/dss-chatbot/index.html"
   },
   {
-    "revision": "304285056c074bef1c14",
+    "revision": "5dc62a9e21b537823c9d",
     "url": "/dss-chatbot/static/css/main.5ecd60fb.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/dss-chatbot/static/js/2.1fcbe31a.chunk.js.LICENSE"
   },
   {
-    "revision": "304285056c074bef1c14",
-    "url": "/dss-chatbot/static/js/main.94ade21b.chunk.js"
+    "revision": "5dc62a9e21b537823c9d",
+    "url": "/dss-chatbot/static/js/main.a065942d.chunk.js"
   },
   {
     "revision": "6c016bb9887d4fcc04eb",
