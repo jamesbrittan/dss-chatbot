@@ -302,7 +302,8 @@ const ReactSimpleChatbot = () => {
       id: "responseLinkToAd",
       message:
         "That’s ok. Now, we want to hear just a bit more about you, so we can personalise your letter.",
-      delay: 1000
+      delay: 1000,
+      trigger: "askRentedSuccessfully",
     },
     {
       id: "askRentedSuccessfully",
