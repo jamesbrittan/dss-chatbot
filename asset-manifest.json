@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/dss-chatbot/static/css/main.5ecd60fb.chunk.css",
-    "main.js": "/dss-chatbot/static/js/main.a065942d.chunk.js",
-    "main.js.map": "/dss-chatbot/static/js/main.a065942d.chunk.js.map",
+    "main.js": "/dss-chatbot/static/js/main.8f51da4b.chunk.js",
+    "main.js.map": "/dss-chatbot/static/js/main.8f51da4b.chunk.js.map",
     "runtime-main.js": "/dss-chatbot/static/js/runtime-main.757cf84a.js",
     "runtime-main.js.map": "/dss-chatbot/static/js/runtime-main.757cf84a.js.map",
     "static/js/2.1fcbe31a.chunk.js": "/dss-chatbot/static/js/2.1fcbe31a.chunk.js",
     "static/js/2.1fcbe31a.chunk.js.map": "/dss-chatbot/static/js/2.1fcbe31a.chunk.js.map",
     "index.html": "/dss-chatbot/index.html",
-    "precache-manifest.42db8fa0e21ee43b6a6cae834bebee76.js": "/dss-chatbot/precache-manifest.42db8fa0e21ee43b6a6cae834bebee76.js",
+    "precache-manifest.af1e91e49653bbb9c59d00e9b3a1cd78.js": "/dss-chatbot/precache-manifest.af1e91e49653bbb9c59d00e9b3a1cd78.js",
     "service-worker.js": "/dss-chatbot/service-worker.js",
     "static/css/main.5ecd60fb.chunk.css.map": "/dss-chatbot/static/css/main.5ecd60fb.chunk.css.map",
     "static/js/2.1fcbe31a.chunk.js.LICENSE": "/dss-chatbot/static/js/2.1fcbe31a.chunk.js.LICENSE"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.757cf84a.js",
     "static/js/2.1fcbe31a.chunk.js",
     "static/css/main.5ecd60fb.chunk.css",
-    "static/js/main.a065942d.chunk.js"
+    "static/js/main.8f51da4b.chunk.js"
   ]
 }
