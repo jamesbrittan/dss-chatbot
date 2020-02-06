@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ChatBot from "react-simple-chatbot";
-import {hAvatar} from "./shelter_h.gif";
+import { hAvatar } from "./shelter_h.gif";
 
 const ReactSimpleChatbot = () => {
   const [name, setName] = useState("");
@@ -17,30 +17,33 @@ const ReactSimpleChatbot = () => {
   //   });
   // });
 
-
   const steps2 = [
     {
       // TODO - get timing of delays right
       id: "start0",
       message:
         "Do you feel you’ve been discriminated against by a letting agent or landlord, because you receive benefits?",
-      trigger: "start1",
+      trigger: () => {
+        console.log("end of start0");
+        console.log(this)
+        return "start1";
+      },
       delay: 1000
     },
     {
       id: "start1",
       message:
         "With just a few easy questions, we can create a personalised letter for you to send to them. Let them know what they’re doing wrong, and they might rethink their policies. You might even have grounds for a legal case against them, but we’ll get to that later.",
-      trigger: "start2",
+      trigger: "start3",
       delay: 4000
     },
-    {
-      id: "start2",
-      message:
-        "Worried about privacy? Don’t be. You can change your contact preferences at any time by giving us a call on 0300 330 1234, or emailing info@shelter.org.uk. If you've already told us you want to receive updates, we'll keep contacting you in the same ways. And don't worry – although Shelter and Shelter Trading activities will use your details, we will never pass them on to third parties for marketing. Read our privacy policy [https://england.shelter.org.uk/contact_us/privacy] for more details.",
-      trigger: "start3",
-      delay: 2000
-    },
+    // {
+    //   id: "start2",
+    //   message:
+    //     "Worried about privacy? Don’t be. You can change your contact preferences at any time by giving us a call on 0300 330 1234, or emailing info@shelter.org.uk. If you've already told us you want to receive updates, we'll keep contacting you in the same ways. And don't worry – although Shelter and Shelter Trading activities will use your details, we will never pass them on to third parties for marketing. Read our privacy policy [https://england.shelter.org.uk/contact_us/privacy] for more details.",
+    //   trigger: "start3",
+    //   delay: 2000
+    // },
     {
       id: "start3",
       message: "Ready to join the fight against discrimination? 💪",
@@ -52,7 +55,7 @@ const ReactSimpleChatbot = () => {
         { value: true, label: "Yes, I'm ready", trigger: "askName" },
         // TODO - what's the next step if "no" is selected?
         { value: false, label: "No, tell me more", trigger: "tellMeMore" }
-      ]
+      ],
     },
     {
       id: "tellMeMore",
@@ -525,24 +528,16 @@ const ReactSimpleChatbot = () => {
   ];
 
   const handleEnd = ({ steps }) => {
-    // let obj = {};
-    // console.log(steps);
-    // console.log(values);
-    // const stepsToCapture = steps.filter(step => step.metadata.capture);
-    // console.log(stepsToCapture);
-    // console.log(steps)
-    // steps.forEach(element => console.log(element));
-    // steps.forEach(step => {
-    //   console.log(step)
-    //   obj[step.metadata.capture] = step.value;
-    // });
-
     console.log(steps);
-    for (const element of steps) {
-      console.log(element);
-    }
   };
-  return <ChatBot botAvatar="https://res.cloudinary.com/dk5jxmsza/image/upload/v1580921453/shelter_h.gif" steps={steps2} handleEnd={handleEnd} />;
+  return (
+    <ChatBot
+      headerTitle="Pocket Lawyer"
+      botAvatar="https://res.cloudinary.com/dk5jxmsza/image/upload/v1580921453/shelter_h.gif"
+      steps={steps2}
+      handleEnd={handleEnd}
+    />
+  );
 };
 
 export default ReactSimpleChatbot;
