@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ChatBot from "react-simple-chatbot";
-import nprogress from "nprogress";
-import "nprogress/nprogress.css";
+// import nprogress from "nprogress";
+// import "nprogress/nprogress.css";
 import { hAvatar } from "./shelter_h.gif";
 
 const ReactSimpleChatbot = () => {
@@ -9,8 +9,8 @@ const ReactSimpleChatbot = () => {
   const [landlordOrAgent, setLandlordOrAgent] = useState("");
   const [refusalDate, setRefusalDate] = useState("");
   const [refusalReason, setRefusalReason] = useState("");
-  nprogress.configure({ trickle: false });
-  nprogress.set(0.0);
+  // nprogress.configure({ trickle: false });
+  // nprogress.set(0.0);
 
   // useEffect(() => {
   //   console.log({
@@ -64,7 +64,7 @@ const ReactSimpleChatbot = () => {
           value: true,
           label: "Yes, I'm ready",
           trigger: () => {
-            nprogress.set(0.5);
+            // nprogress.set(0.5);
             return "askName";
           }
         },
@@ -73,7 +73,7 @@ const ReactSimpleChatbot = () => {
           value: false,
           label: "No, tell me more",
           trigger: () => {
-            nprogress.set(0.5);
+            // nprogress.set(0.5);
             return "tellMeMore";
           }
         }
@@ -91,7 +91,7 @@ const ReactSimpleChatbot = () => {
           value: true,
           label: "Ok, let's get started",
           trigger: () => {
-            nprogress.set(0.1);
+            // nprogress.set(0.1);
             return "askName";
           }
         }
@@ -102,7 +102,7 @@ const ReactSimpleChatbot = () => {
       message:
         "Great! 😀 What’s your full name? We need this to say who the letter is from.",
       trigger: () => {
-        nprogress.set(0.15);
+        // nprogress.set(0.15);
         return "setName";
       }
     },
@@ -563,7 +563,7 @@ const ReactSimpleChatbot = () => {
 
   const handleEnd = ({ steps }) => {
     console.log(steps);
-    nprogress.done();
+    // nprogress.done();
   };
   return (
     <ChatBot
