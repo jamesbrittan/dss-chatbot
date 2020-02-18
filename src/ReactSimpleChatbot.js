@@ -405,27 +405,27 @@ const ReactSimpleChatbot = () => {
         {
           value: { savings: "yes", rent: "no", guarantor: null },
           label: "I have savings but could not pay rent in advance",
-          trigger: "askDoYouHaveSavings"
+          trigger: "responseDoYouHaveSavings"
         },
         {
           value: { savings: "yes", rent: "some", guarantor: null },
           label: "I have savings and could pay some rent in advance",
-          trigger: "askDoYouHaveSavings"
+          trigger: "responseDoYouHaveSavings"
         },
         {
           value: { savings: null, rent: null, guarantor: "yes" },
           label: "I have someone who could be a guarantor",
-          trigger: "askDoYouHaveSavings"
+          trigger: "responseDoYouHaveSavings"
         },
         {
           value: { savings: "no", rent: "no", guarantor: "no" },
           label: "I don’t have any of these",
-          trigger: "askDoYouHaveSavings"
+          trigger: "responseDoYouHaveSavings"
         },
         {
           value: { savings: "unsure", rent: "unsure", guarantor: "unsure" },
           label: "I’m not sure",
-          trigger: "askDoYouHaveSavings"
+          trigger: "responseDoYouHaveSavings"
         }
       ],
       metadata: {
@@ -433,7 +433,7 @@ const ReactSimpleChatbot = () => {
       }
     },
     {
-      id: "responseCanYouGetLandlordReference",
+      id: "responseDoYouHaveSavings",
       message:
         "Thanks for sticking with us so far! 👍 Only three more questions to go...",
       delay: 1000,
@@ -483,22 +483,6 @@ const ReactSimpleChatbot = () => {
       message:
         "You’re not only standing up for yourself, but for others in similar situations – and together, we’re more likely to make change happen.",
       trigger: "end5"
-    },
-    {
-      // TODO - this feels redundant
-      id: "askReadyForLetter",
-      message: "Ready to get your personalised letter? ➡️",
-      trigger: "setCanYouGetLandlordReference"
-    },
-    {
-      id: "setCanYouGetLandlordReference",
-      options: [
-        { value: true, label: "Yes", trigger: "end6" },
-        { value: false, label: "No", trigger: "end6" }
-      ],
-      metadata: {
-        capture: "wereYouRefused"
-      }
     },
     {
       id: "end5",
