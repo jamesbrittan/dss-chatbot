@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ChatBot from "react-simple-chatbot";
+import nprogress from "nprogress";
+import "nprogress/nprogress.css";
 import { hAvatar } from "./shelter_h.gif";
 
 const ReactSimpleChatbot = () => {
@@ -7,6 +9,8 @@ const ReactSimpleChatbot = () => {
   const [landlordOrAgent, setLandlordOrAgent] = useState("");
   const [refusalDate, setRefusalDate] = useState("");
   const [refusalReason, setRefusalReason] = useState("");
+  nprogress.configure({ trickle: false });
+  nprogress.set(0.0);
 
   // useEffect(() => {
   //   console.log({
@@ -17,6 +21,10 @@ const ReactSimpleChatbot = () => {
   //   });
   // });
 
+  // const updateProgress = (percent) => {
+  //   nprogress.set(perc)
+  // }
+
   const steps2 = [
     {
       // TODO - get timing of delays right
@@ -25,7 +33,7 @@ const ReactSimpleChatbot = () => {
         "Do you feel you’ve been discriminated against by a letting agent or landlord, because you receive benefits?",
       trigger: () => {
         console.log("end of start0");
-        console.log(this)
+        console.log(this);
         return "start1";
       },
       delay: 1000
@@ -52,10 +60,24 @@ const ReactSimpleChatbot = () => {
     {
       id: "start4",
       options: [
-        { value: true, label: "Yes, I'm ready", trigger: "askName" },
+        {
+          value: true,
+          label: "Yes, I'm ready",
+          trigger: () => {
+            nprogress.set(0.5);
+            return "askName";
+          }
+        },
         // TODO - what's the next step if "no" is selected?
-        { value: false, label: "No, tell me more", trigger: "tellMeMore" }
-      ],
+        {
+          value: false,
+          label: "No, tell me more",
+          trigger: () => {
+            nprogress.set(0.5);
+            return "tellMeMore";
+          }
+        }
+      ]
     },
     {
       id: "tellMeMore",
@@ -65,14 +87,24 @@ const ReactSimpleChatbot = () => {
     {
       id: "tellMeMoreAcknowledge",
       options: [
-        { value: true, label: "Ok, let's get started", trigger: "askName" }
+        {
+          value: true,
+          label: "Ok, let's get started",
+          trigger: () => {
+            nprogress.set(0.1);
+            return "askName";
+          }
+        }
       ]
     },
     {
       id: "askName",
       message:
         "Great! 😀 What’s your full name? We need this to say who the letter is from.",
-      trigger: "setName"
+      trigger: () => {
+        nprogress.set(0.15);
+        return "setName";
+      }
     },
     {
       id: "setName",
@@ -303,18 +335,19 @@ const ReactSimpleChatbot = () => {
       message:
         "That’s ok. Now, we want to hear just a bit more about you, so we can personalise your letter.",
       delay: 1000,
-      trigger: "askRentedSuccessfully",
+      trigger: "askRentedSuccessfully"
     },
     {
       id: "askRentedSuccessfully",
       message:
-        "Have you rented successfully before, paying your rent in full and on time? (We know this seems personal, but it’s completely confidential and helps us build a picture of your situation)"
+        "Have you rented successfully before, paying your rent in full and on time? (We know this seems personal, but it’s completely confidential and helps us build a picture of your situation)",
+      trigger: "setRentedSuccessfully"
     },
     {
       id: "setRentedSuccessfully",
       options: [
-        { value: true, label: "Yes", trigger: "responseLinkToAd" },
-        { value: false, label: "No", trigger: "responseLinkToAd" }
+        { value: true, label: "Yes", trigger: "askHowManyYearsRentedSuccessfully" },
+        { value: false, label: "No", trigger: "askHowManyYearsRentedSuccessfully" }
       ],
       metadata: {
         capture: "wereYouRefused"
@@ -500,7 +533,7 @@ const ReactSimpleChatbot = () => {
     {
       // TODO - needs completion message
       id: "end7",
-      message: "this is the end",
+      message: "Thank you, more information can be found at https://england.shelter.org.uk/support_us/campaigns/dss",
       end: true
     }
     // {
@@ -530,6 +563,7 @@ const ReactSimpleChatbot = () => {
 
   const handleEnd = ({ steps }) => {
     console.log(steps);
+    nprogress.done();
   };
   return (
     <ChatBot
