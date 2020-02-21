@@ -435,7 +435,7 @@ const ReactSimpleChatbot = () => {
     {
       id: "responseDoYouHaveSavings",
       message:
-        "Thanks for sticking with us so far! 👍 Only three more questions to go...",
+        "Thanks for sticking with us so far! 👍",
       delay: 1000,
       trigger: "askMonthlyIncome"
     },
