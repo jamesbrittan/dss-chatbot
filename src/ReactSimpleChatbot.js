@@ -3,6 +3,33 @@ import ChatBot from "react-simple-chatbot";
 // import nprogress from "nprogress";
 // import "nprogress/nprogress.css";
 import { hAvatar } from "./shelter_h.gif";
+import styled from "styled-components";
+
+const LetterContainer = styled.div`
+  max-width: 960px;
+  margin: 0 auto;
+
+  .align-left {
+    text-align: right;
+  }
+`;
+
+const todaysDate = () => {
+  const today = new Date();
+  let dd = today.getDate();
+  let mm = today.getMonth() + 1;
+  const yyyy = today.getFullYear();
+
+  if (dd < 10) {
+    dd = "0" + dd;
+  }
+
+  if (mm < 10) {
+    mm = "0" + mm;
+  }
+
+  return `${dd}/${mm}/${yyyy}`;
+};
 
 const ReactSimpleChatbot = () => {
   const [name, setName] = useState("XX");
@@ -46,12 +73,12 @@ const ReactSimpleChatbot = () => {
 
   // TODO - Should "I can pay a deposit" be conditional?
   // TODO - What should happen when "I have lived in my current home for just over x years" is less than 1?
-  const letterText = () => (
-    <div>
+  const LetterText = () => (
+    <LetterContainer>
       <p className="align-left">
         {email}
         <br />
-        March 2nd 2019
+        {todaysDate()}
       </p>
 
       <p>
@@ -128,13 +155,13 @@ const ReactSimpleChatbot = () => {
       </p>
 
       <p>
-        If landlord/agent cited insurance: Landlord insurance to cover
-        letting to benefit claimants (including rent guarantee insurance) is
-        readily available at an affordable rate. Having a restrictive insurance
-        policy is therefore not an objective justification for the practice of
-        refusing to consider letting to any/all potential tenants in receipt of
-        benefits. An alternative, more proportionate means for the landlord to
-        achieve their legitimate aim of finding a suitable tenant and running a
+        If landlord/agent cited insurance: Landlord insurance to cover letting
+        to benefit claimants (including rent guarantee insurance) is readily
+        available at an affordable rate. Having a restrictive insurance policy
+        is therefore not an objective justification for the practice of refusing
+        to consider letting to any/all potential tenants in receipt of benefits.
+        An alternative, more proportionate means for the landlord to achieve
+        their legitimate aim of finding a suitable tenant and running a
         profitable business would be to consider all potential tenants on a
         case-by-case basis. If the tenant selected happens to receive benefits,
         the landlord should apply to have their existing insurance policy
@@ -165,7 +192,7 @@ const ReactSimpleChatbot = () => {
         Yours sincerely,
         <br /> {name}
       </p>
-    </div>
+    </LetterContainer>
   );
 
   const trigger = (value, set, next) => {
@@ -674,38 +701,15 @@ const ReactSimpleChatbot = () => {
     {
       id: "end5",
       // TODO - add link
-      message:
-        "Great! Here you go. Just click on the link to download your letter.",
+      message: "Great! Here you go. Your letter will be displayed soon.", //TODO - I wrote this line and it's rubbish
       trigger: "end6",
+      delay: 1500,
     },
-    {
-      id: "end6",
-      message:
-        "By sending this letter, you’re helping us fight against ‘no DSS’ discrimination. This could improve the future of renters like you and others, who simply want a place to call home. We can’t do this without your help, so thank you for getting involved.",
-      trigger: "askMoreHelp",
-    },
-    {
-      id: "askMoreHelp",
-      message:
-        "Do you want more help, or to know more about our No DSS campaign?",
-      trigger: "setMoreHelp",
-    },
-    {
-      id: "setMoreHelp",
-      // TODO - what happens if the user select "yes"?
-      options: [
-        { value: true, label: "Yes", trigger: "end7" },
-        { value: false, label: "No", trigger: "end7" },
-      ],
-      metadata: {
-        capture: "wereYouRefused",
-      },
-    },
+
     {
       // TODO - needs completion message
-      id: "end7",
-      message:
-        "Thank you, more information can be found at https://england.shelter.org.uk/support_us/campaigns/dss",
+      id: "end6",
+      message: "...",
       end: true,
     },
     // {
@@ -735,17 +739,21 @@ const ReactSimpleChatbot = () => {
 
   const handleEnd = ({ steps }) => {
     console.log(steps);
+    setFinished(true);
     // nprogress.done();
   };
   return (
     <>
-      <ChatBot
-        headerTitle="Pocket Lawyer"
-        botAvatar="https://res.cloudinary.com/dk5jxmsza/image/upload/v1580921453/shelter_h.gif"
-        steps={steps2}
-        handleEnd={handleEnd}
-      />
-      {finished && letterText()}
+      {finished ? (
+        <LetterText />
+      ) : (
+        <ChatBot
+          headerTitle="Pocket Lawyer"
+          botAvatar="https://res.cloudinary.com/dk5jxmsza/image/upload/v1580921453/shelter_h.gif"
+          steps={steps2}
+          handleEnd={handleEnd}
+        />
+      )}
     </>
   );
 };
