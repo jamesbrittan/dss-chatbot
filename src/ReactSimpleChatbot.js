@@ -9,7 +9,7 @@ const LetterContainer = styled.div`
   max-width: 960px;
   margin: 0 auto;
 
-  .align-left {
+  .align-right {
     text-align: right;
   }
 `;
@@ -75,7 +75,7 @@ const ReactSimpleChatbot = () => {
   // TODO - What should happen when "I have lived in my current home for just over x years" is less than 1?
   const LetterText = () => (
     <LetterContainer>
-      <p className="align-left">
+      <p className="align-right">
         {email}
         <br />
         {todaysDate()}
