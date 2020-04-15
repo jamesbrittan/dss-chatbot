@@ -54,7 +54,7 @@ const ReactSimpleChatbot = () => {
   // const [refusalDate, setRefusalDate] = useState("");
   // const [refusalReason, setRefusalReason] = useState("");
 
-  const [finished, setFinished] = useState(true);
+  const [finished, setFinished] = useState(false);
   // nprogress.configure({ trickle: false });
   // nprogress.set(0.0);
 
