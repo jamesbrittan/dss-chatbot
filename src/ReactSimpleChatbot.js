@@ -5,15 +5,16 @@ import ChatBot from "react-simple-chatbot";
 import { hAvatar } from "./shelter_h.gif";
 
 const ReactSimpleChatbot = () => {
-  const [name, setName] = useState("James Brittan");
-  const [email, setEmail] = useState("jamesbrittan@gmail.com");
-  const [gender, setGender] = useState("male");
-  const [income, setIncome] = useState("1000");
-  const [canPayRentInAdvance, setCanPayRentInAdvance] = useState(true);
-  const [hasGuarantor, setHasGuarantor] = useState(true);
-  const [yearsInCurrentHome, setYearsInCurrentHome] = useState(2);
-  const [yearsInPreviousProperties, setYearsInPreviousProperties] = useState(4);
-  const [hasSpecificEvidence, setHasSpecificEvidence] = useState(true);
+  const [name, setName] = useState("XX");
+  const [email, setEmail] = useState("test@example.com"); // TODO - the script doesn't ask for an email address
+  const [gender, setGender] = useState("XX");
+  const [income, setIncome] = useState("XX");
+  const [canPayRentInAdvance, setCanPayRentInAdvance] = useState(false);
+  const [hasGuarantor, setHasGuarantor] = useState(false);
+  const [hasSavings, setHasSavings] = useState(false); // TODO - this info isn't used in the letter, is it required?
+  const [yearsInCurrentHome, setYearsInCurrentHome] = useState();
+  const [yearsInPreviousProperties, setYearsInPreviousProperties] = useState(0);
+  const [hasSpecificEvidence, setHasSpecificEvidence] = useState(false);
   const [dateOfDiscrimination, setDateofDiscrimination] = useState(
     "March 2020"
   );
@@ -43,6 +44,8 @@ const ReactSimpleChatbot = () => {
   //   nprogress.set(perc)
   // }
 
+  // TODO - Should "I can pay a deposit" be conditional?
+  // TODO - What should happen when "I have lived in my current home for just over x years" is less than 1?
   const letterText = () => (
     <div>
       <p className="align-left">
@@ -58,60 +61,74 @@ const ReactSimpleChatbot = () => {
         <strong>FORMAL COMPLAINT</strong>
       </p>
       <p>
-        My name is {name}. I am a {gender} and I am in receipt of benefits.{" "}
-        {isDisabled && "I am also disabled."} My total income is about £{income}{" "}
-        per month. I can pay a deposit{" "}
+        My name is {name}. I am a {gender} and I am in receipt of benefits.
+        {isDisabled && " I am also disabled."} My total income is about £
+        {income} per month. I can pay a deposit{" "}
         {canPayRentInAdvance && "and am able to pay rent in advance"}.{" "}
         {hasGuarantor &&
           "I also have a fulltime employed/home owning guarantor."}
       </p>
       <p>
-        I have lived in my current home for just over {yearsInCurrentHome} years,
-        paying the rent in full and on time. I have a good rental history in
-        other properties, covering the last {yearsInPreviousProperties} years. I
-        am currently searching for a new home.
+        I have lived in my current home for just over {yearsInCurrentHome}{" "}
+        years, paying the rent in full and on time.{" "}
+        {yearsInPreviousProperties > 0 &&
+          `I have a good rental history
+        in other properties, covering the last ${yearsInPreviousProperties} years.`}{" "}
+        I am currently searching for a new home.
       </p>
 
       <p>
-        {hasSpecificEvidence
-          ? <div>On {dateOfDiscrimination} I saw your advert for a property on {wherePropertyWasAdvertised} that would be both appropriate and affordable for me. Here is a
-              <a href={linkToAd}>link to the advert</a>.</div>
-          : <div>I have (seen adverts of yours which state ‘No DSS’ spoken to one of your agents, who said the home I wanted didn’t accept people who receive benefits) TODO - Unsure where this is asked</div>}
+        {hasSpecificEvidence ? (
+          <div>
+            On {dateOfDiscrimination} I saw your advert for a property on{" "}
+            {wherePropertyWasAdvertised} that would be both appropriate and
+            affordable for me. Here is a{" "}
+            <a href={linkToAd}>link to the advert</a>.
+          </div>
+        ) : (
+          <div>
+            I have seen adverts of yours which state ‘No DSS’ spoken to one of
+            your agents, who said the home I wanted didn’t accept people who
+            receive benefits
+          </div>
+        )}
       </p>
       <p>
         <strong>The law</strong>
         <br />
-          Section 19 of the Equality Act 2010 prohibits ‘indirect discrimination’.
-          Indirect discrimination occurs where a policy, practice or procedure
-          which is not discriminatory in itself is likely to impact
-          disproportionately on people with a ‘protected characteristic’ – such as
-          women or people with a disability. A practice, policy or procedure can
-          be formal or informal. It can be a one-off decision or a decision to do
-          something in the future. It includes things like arrangements, criteria,
-          conditions, qualifications or provisions.
+        Section 19 of the Equality Act 2010 prohibits ‘indirect discrimination’.
+        Indirect discrimination occurs where a policy, practice or procedure
+        which is not discriminatory in itself is likely to impact
+        disproportionately on people with a ‘protected characteristic’ – such as
+        women or people with a disability. A practice, policy or procedure can
+        be formal or informal. It can be a one-off decision or a decision to do
+        something in the future. It includes things like arrangements, criteria,
+        conditions, qualifications or provisions.
       </p>
       <p>
-        Shelter’s analysis of official
-        figures show that women are more likely to be benefit claimants than men
-        and that that those with disabilities are more likely to be in receipt
-        of benefits than those without disabilities. This means that a practice
-        or criteria of excluding tenants in receipt of benefits is likely to
-        impact more negatively upon women than men and more negatively upon
-        those with disabilities than those without. If there is no good reason
-        for this practice, this practice would amount to unlawful indirect
-        discrimination against women and people with disabilities.
+        Shelter’s analysis of official figures show that women are more likely
+        to be benefit claimants than men and that that those with disabilities
+        are more likely to be in receipt of benefits than those without
+        disabilities. This means that a practice or criteria of excluding
+        tenants in receipt of benefits is likely to impact more negatively upon
+        women than men and more negatively upon those with disabilities than
+        those without. If there is no good reason for this practice, this
+        practice would amount to unlawful indirect discrimination against women
+        and people with disabilities.
       </p>
-      <p>If landlord/agent cited mortgage:The Shelter/You Gov, 2017 Private Renters Survey revealed
-        that a substantial proportion of landlords (45%) had no outstanding
-        mortgages on any of the homes they let out. For those who do have
-        mortgages, Shelter research shows that most buy-to-let mortgages do not
-        have any restrictions upon landlords letting to those in receipt of
-        benefits. According to UK Finance, 80% of the market (according to
-        market share) allow landlords to let to people in receipt of benefits.
+      <p>
+        If landlord/agent cited mortgage:The Shelter/You Gov, 2017 Private
+        Renters Survey revealed that a substantial proportion of landlords (45%)
+        had no outstanding mortgages on any of the homes they let out. For those
+        who do have mortgages, Shelter research shows that most buy-to-let
+        mortgages do not have any restrictions upon landlords letting to those
+        in receipt of benefits. According to UK Finance, 80% of the market
+        (according to market share) allow landlords to let to people in receipt
+        of benefits.
       </p>
 
       <p>
-        If landlord/agent cited insurance:` + Landlord insurance to cover
+        If landlord/agent cited insurance: Landlord insurance to cover
         letting to benefit claimants (including rent guarantee insurance) is
         readily available at an affordable rate. Having a restrictive insurance
         policy is therefore not an objective justification for the practice of
@@ -126,36 +143,35 @@ const ReactSimpleChatbot = () => {
       </p>
 
       <p>
-      <strong>What I am asking you to do</strong>
+        <strong>What I am asking you to do</strong>
       </p>
       <p>
-       Applying a blanket ban on any / all
-        applications from prospective tenants who receive benefits may make you
-        liable for unlawful indirect discrimination.
+        Applying a blanket ban on any / all applications from prospective
+        tenants who receive benefits may make you liable for unlawful indirect
+        discrimination.
       </p>
       <p>
-        Please provide a formal
-        response to my complaint in writing within n the next seven days, and
-        either: <br/>
-        1) confirm that you will amend your policy of refusing
-        applications to individuals in receipt of benefits s and permit me to
-        apply to rent, and <br />
-
-        2) confirm that from now on, you will cease any
-        practice, policy or procedure of refusing to consider applications to
-        rent from individuals who receive benefits or <br />
-
-        3) provide me with written
-        reasons as to why you take the view that refusing my
-        application/refusing to consider applications from individuals in
-        receipt of benefits is justifiable <br /> <br />
-
-        Yours sincerely,<br/> {name}
+        Please provide a formal response to my complaint in writing within n the
+        next seven days, and either: <br />
+        1) confirm that you will amend your policy of refusing applications to
+        individuals in receipt of benefits s and permit me to apply to rent, and{" "}
+        <br />
+        2) confirm that from now on, you will cease any practice, policy or
+        procedure of refusing to consider applications to rent from individuals
+        who receive benefits or <br />
+        3) provide me with written reasons as to why you take the view that
+        refusing my application/refusing to consider applications from
+        individuals in receipt of benefits is justifiable <br /> <br />
+        Yours sincerely,
+        <br /> {name}
       </p>
     </div>
   );
 
-console.log(letterText)
+  const trigger = (value, set, next) => {
+    set(value.value);
+    return next;
+  };
 
   const steps2 = [
     {
@@ -246,10 +262,9 @@ console.log(letterText)
         if (typeof value !== "string") {
           return "value should be a string";
         }
-        // setName(value);
         return true;
       },
-      trigger: "askWereYouRefused",
+      trigger: (value) => trigger(value, setName, "askWereYouRefused"),
       metadata: {
         capture: name,
       },
@@ -338,9 +353,21 @@ console.log(letterText)
       id: "setHowDoYouIdentify",
       // TODO - Should there be a "prefer not to say" option here?
       options: [
-        { value: "male", label: "Male", trigger: "askDisability" },
-        { value: "female", label: "Female", trigger: "askDisability" },
-        { value: "non-binary", label: "Non-binary", trigger: "askDisability" },
+        {
+          value: "male",
+          label: "Male",
+          trigger: (value) => trigger(value, setGender, "askDisability"),
+        },
+        {
+          value: "female",
+          label: "Female",
+          trigger: (value) => trigger(value, setGender, "askDisability"),
+        },
+        {
+          value: "non-binary",
+          label: "Non-binary",
+          trigger: (value) => trigger(value, setGender, "askDisability"),
+        },
         {
           value: "other",
           label: "Other – can I explain?",
@@ -512,7 +539,8 @@ console.log(letterText)
         // setName(value);
         return true;
       },
-      trigger: "askCanYouGetLandlordReference",
+      trigger: (value) =>
+        trigger(value, setYearsInCurrentHome, "askCanYouGetLandlordReference"),
       metadata: {
         capture: "wereYouRefused",
       },
@@ -545,27 +573,50 @@ console.log(letterText)
         {
           value: { savings: "yes", rent: "no", guarantor: null },
           label: "I have savings but could not pay rent in advance",
-          trigger: "responseDoYouHaveSavings",
+          trigger: (value) => {
+            setHasSavings(true);
+            setCanPayRentInAdvance(false);
+            return "responseDoYouHaveSavings";
+          },
         },
         {
           value: { savings: "yes", rent: "some", guarantor: null },
           label: "I have savings and could pay some rent in advance",
-          trigger: "responseDoYouHaveSavings",
+          trigger: (value) => {
+            // TODO - this doesn't reflect "some" answer correctly
+            setHasSavings(true);
+            setCanPayRentInAdvance(true);
+            return "responseDoYouHaveSavings";
+          },
         },
         {
           value: { savings: null, rent: null, guarantor: "yes" },
           label: "I have someone who could be a guarantor",
-          trigger: "responseDoYouHaveSavings",
+          trigger: (value) => {
+            setHasGuarantor(true);
+            return "responseDoYouHaveSavings";
+          },
         },
         {
           value: { savings: "no", rent: "no", guarantor: "no" },
           label: "I don’t have any of these",
-          trigger: "responseDoYouHaveSavings",
+          trigger: (value) => {
+            setHasGuarantor(false);
+            setHasSavings(false);
+            setCanPayRentInAdvance(false);
+            return "responseDoYouHaveSavings";
+          },
         },
         {
           value: { savings: "unsure", rent: "unsure", guarantor: "unsure" },
           label: "I’m not sure",
-          trigger: "responseDoYouHaveSavings",
+          trigger: (value) => {
+            // TODO - this doesn't reflect "unsure" answer correctly
+            setHasGuarantor(false);
+            setHasSavings(false);
+            setCanPayRentInAdvance(false);
+            return "responseDoYouHaveSavings";
+          },
         },
       ],
       metadata: {
@@ -595,10 +646,7 @@ console.log(letterText)
         // setName(value);
         return true;
       },
-      trigger: "end1",
-      metadata: {
-        capture: "wereYouRefused",
-      },
+      trigger: (value) => trigger(value, setIncome, "end1"),
     },
     {
       id: "end1",
